@@ -12,28 +12,24 @@ def busqueda_general(grafo, costo, inicio, meta):
    	costo_actual: valor del costo obtenido al realizar la busqueda
 	None: Si no se encuentra un camino desde el nodo de inicio hasta el nodo de destino
  	"""
-	# Declaramos una lista vacía visitado para almacenar los nodos visitados durante la búsqueda.
-	visitado = []
-	#Creamos una lista cola con un solo elemento que es una tupla que contiene el nodo de inicio y un costo de 0.
-	cola = [(inicio, 0)]
-    #Inicia un bucle while con la condición cola que ejecuta las siguientes operaciones mientras la cola no esté vacía.
+	# Inicializa una lista vacía `rutas` para almacenar las rutas encontradas desde el nodo inicio hasta el nodo destino.
+	rutas = []
+    # Inicializa una lista cola con un solo elemento que es una tupla que contiene el nodo de inicio, una lista con el nodo inicio y un costo de 0.
+	cola = [(inicio, [inicio], 0)]
+    # Inicia un bucle while con la condición cola que ejecuta las siguientes operaciones mientras la cola no esté vacía.
 	while cola:
-		#Asigna a las variables nodo y costo_actual los valores del último elemento de la lista cola y lo elimina de la misma.
-		nodo, costo_actual = cola.pop(0)
-		#Verificamos si nodo es igual a la meta deseada, si es así, devolvemos el costo total obtenido
+        # Asigna a las variables nodo, ruta y costo_actual los valores del último elemento de la lista cola y lo elimina de la misma.
+		nodo, ruta, costo_actual = cola.pop(0)
+        # Verifica si nodo es igual a la meta deseada, si es así, agrega la ruta actual y su costo a la lista de rutas.
 		if nodo == meta:
-			#Retornamos el costo
-			return costo_actual,visitado
-       #Verificamos si nodo no está en la lista de visitado
-		if nodo not in visitado:
-			#Si es asi agregamos ese nodo a la lista de visitado
-			visitado.append(nodo)
-			#Bucle for para cada vecino en grafo[nodo]
+			rutas.append((ruta, costo_actual))
+        # Si el nodo actual no es el destino, agrega a la cola todos los vecinos del nodo actual que aún no estén en la ruta actual.
+		else:
 			for vecino in grafo[nodo]:
-				 #se agrega a la lista cola una tupla con el vecino y un costo actualizado de costo_actual + cost[(node, neighbor)].
-				cola.append((vecino, costo_actual + costo[(nodo, vecino)]))
-    #Retornamos el valor de none si no se encuentra un camino desde el nodo de inicio hasta el nodo de destino
-	return None
+				if vecino not in ruta:
+					cola.append((vecino, ruta + [vecino], costo_actual + costo[(nodo, vecino)]))
+    # Retorna la lista de rutas encontradas desde el nodo inicio hasta el nodo destino junto con sus costos.
+	return rutas
 
 if __name__ == "__main__":
 	# creación del grafo y diccionario de costos
@@ -83,13 +79,15 @@ if __name__ == "__main__":
 	
 	#Imprimimos el nodo y el grafo en modo de lista de listas y en un diccionario para los costos
 	print(graph, cost)
-	# establecer el estado objetivo
-	meta = 6
+	# solicitamos el nodo objetivo
+	meta = int(input("Ingrese el nodo al que quiere llegar: "))
 	
-	# establecer el nodo inicial
-	inicio = 0
-	#Imprimimos el el costo total obtenido desde el nodo de inicio hasta el nodo meta
-	costo,camino = busqueda_general(graph, cost, inicio, meta)
-	print(f"Minimo costo del nodo {inicio} al nodo {meta} es {costo}")
-	print(f"Camino recorrido: {camino}")
+	# solicitamos nodo inicio
+	inicio = int(input("Ingrese el nodo donde quiere iniciar: "))
+	# Ejecuta la función `buscar_rutas` y asigna el resultado a la variable `rutas`.
+	rutas = busqueda_general(graph, cost, inicio, meta)
+	
+	# Imprime cada ruta y su costo encontrado.
+	for ruta, costo in rutas:
+	    print("Ruta:", ruta, "Costo:", costo)
 
