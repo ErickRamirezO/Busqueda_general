@@ -14,12 +14,12 @@ def busqueda_general(grafo, costo, inicio, meta):
  	"""
 	# Inicializa una lista vacía `rutas` para almacenar las rutas encontradas desde el nodo inicio hasta el nodo destino.
 	rutas = []
-    # Inicializa una lista cola con un solo elemento que es una tupla que contiene el nodo de inicio, una lista con el nodo inicio y un costo de 0.
-	cola = [(inicio, [inicio], 0)]
+    # Inicializa una lista "lista" con un solo elemento que es una tupla que contiene el nodo de inicio, una lista con el nodo inicio y un costo de 0.
+	lista = [(inicio, [inicio], 0)]
     # Inicia un bucle while con la condición cola que ejecuta las siguientes operaciones mientras la cola no esté vacía.
-	while cola:
+	while lista:
         # Asigna a las variables nodo, ruta y costo_actual los valores del último elemento de la lista cola y lo elimina de la misma.
-		nodo, ruta, costo_actual = cola.pop(0)
+		nodo, ruta, costo_actual = lista.pop(0)
         # Verifica si nodo es igual a la meta deseada, si es así, agrega la ruta actual y su costo a la lista de rutas.
 		if nodo == meta:
 			rutas.append((ruta, costo_actual))
@@ -27,7 +27,7 @@ def busqueda_general(grafo, costo, inicio, meta):
 		else:
 			for vecino in grafo[nodo]:
 				if vecino not in ruta:
-					cola.append((vecino, ruta + [vecino], costo_actual + costo[(nodo, vecino)]))
+					lista.append((vecino, ruta + [vecino], costo_actual + costo[(nodo, vecino)]))
     # Retorna la lista de rutas encontradas desde el nodo inicio hasta el nodo destino junto con sus costos.
 	return rutas
 
